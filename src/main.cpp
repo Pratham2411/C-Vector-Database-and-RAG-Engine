@@ -23,7 +23,7 @@ int main() {
 
     const bool ollamaUp = ollama.isAvailable();
     std::cout << "=== " << myai::PROJECT_NAME << " Engine ===" << std::endl;
-    std::cout << "Author: " << myai::AUTHOR_NAME << " · " << myai::AUTHOR_ORG << std::endl;
+    std::cout << "Author: " << myai::AUTHOR_NAME << " - " << myai::AUTHOR_ORG << std::endl;
     std::cout << "http://localhost:" << myai::DEFAULT_PORT << std::endl;
     std::cout << db.size() << " demo vectors | " << myai::DEMO_DIMS
               << " dims | HNSW+KD-Tree+BruteForce" << std::endl;

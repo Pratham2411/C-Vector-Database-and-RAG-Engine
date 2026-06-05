@@ -2,23 +2,26 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>MY-AI — Vector Database + RAG | Pratham Raj</title>
+<title>MY-AI - Vector Database + RAG | Pratham Raj</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:     #07070f;
-  --card:   #0c0c18;
-  --border: #151528;
-  --cs:     #00d9ff;
-  --math:   #b388ff;
-  --food:   #ffb74d;
-  --sports: #69f0ae;
-  --accent: #6c63ff;
-  --text:   #cdd6f4;
-  --muted:  #4a4a6a;
-  --red:    #f38ba8;
-  --green:  #a6e3a1;
+  --bg:     #0b0d10;
+  --panel:  #11161d;
+  --card:   #151b23;
+  --soft:   #1c2630;
+  --border: #2a3441;
+  --cs:     #38bdf8;
+  --math:   #a78bfa;
+  --food:   #f59e0b;
+  --sports: #22c55e;
+  --accent: #14b8a6;
+  --text:   #e5edf5;
+  --muted:  #8a98a8;
+  --red:    #fb7185;
+  --green:  #34d399;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
@@ -26,45 +29,44 @@ body {
   font-family: 'Fira Code', 'Courier New', monospace;
   height: 100vh; overflow: hidden;
   display: flex; flex-direction: column;
+  color-scheme: dark;
 }
 
-/* ── HEADER ── */
+/*  HEADER  */
 header {
-  background: var(--card); border-bottom: 1px solid var(--border);
-  padding: 10px 20px; display: flex; align-items: center; gap: 12px; flex-shrink: 0;
+  background: rgba(17,22,29,.98); border-bottom: 1px solid var(--border);
+  padding: 12px 20px; display: flex; align-items: center; gap: 12px; flex-shrink: 0;
 }
 header h1 {
-  font-size: 17px; font-weight: 600; letter-spacing: 4px;
-  background: linear-gradient(90deg, var(--cs), var(--accent), var(--math));
-  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  font-size: 18px; font-weight: 600; letter-spacing: 2px; color: var(--text);
 }
-.badge { font-size: 10px; padding: 2px 8px; border-radius: 10px; letter-spacing: 1px; border: 1px solid var(--border); color: var(--muted); }
-.badge.hl { border-color: var(--accent); color: var(--accent); background: rgba(108,99,255,.12); }
+.badge { font-size: 10px; padding: 3px 8px; border-radius: 6px; letter-spacing: .6px; border: 1px solid var(--border); color: var(--muted); background: var(--bg); white-space: nowrap; }
+.badge.hl { border-color: var(--accent); color: var(--accent); background: rgba(20,184,166,.12); }
 .badge.ok { border-color: var(--green); color: var(--green); background: rgba(166,227,161,.1); }
 .badge.err { border-color: var(--red); color: var(--red); background: rgba(243,139,168,.1); }
 #statsLabel { margin-left: auto; font-size: 11px; color: var(--muted); }
 
-/* ── LAYOUT ── */
+/*  LAYOUT  */
 .layout { display: flex; flex: 1; overflow: hidden; }
-.left-panel { width: 260px; flex-shrink: 0; background: var(--card); border-right: 1px solid var(--border); overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 18px; }
-.center-panel { flex: 1; position: relative; overflow: hidden; }
+.left-panel { width: 282px; flex-shrink: 0; background: var(--panel); border-right: 1px solid var(--border); overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 18px; }
+.center-panel { flex: 1; position: relative; overflow: hidden; background: #090b0f; }
 #scatter { display: block; width: 100%; height: 100%; }
-.right-panel { width: 360px; flex-shrink: 0; background: var(--card); border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+.right-panel { width: 390px; flex-shrink: 0; background: var(--panel); border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
 
-/* ── TABS ── */
+/*  TABS  */
 .tabs { display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-.tab { flex: 1; padding: 10px 6px; text-align: center; font-size: 10px; letter-spacing: 1px; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; transition: all .2s; }
+.tab { flex: 1; padding: 12px 6px; text-align: center; font-size: 10px; letter-spacing: 1px; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; transition: all .2s; }
 .tab.on { color: var(--accent); border-bottom-color: var(--accent); }
-.tab-content { display: none; flex: 1; overflow-y: auto; padding: 16px; flex-direction: column; gap: 16px; }
+.tab-content { display: none; flex: 1; overflow-y: auto; padding: 18px; flex-direction: column; gap: 18px; }
 .tab-content.on { display: flex; }
 
-/* ── COMMON COMPONENTS ── */
+/*  COMMON COMPONENTS  */
 .sec { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; }
 input[type=text], select, textarea {
   width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text);
-  padding: 9px 11px; border-radius: 6px; font-family: inherit; font-size: 12px; outline: none; transition: border-color .2s;
+  padding: 10px 11px; border-radius: 6px; font-family: inherit; font-size: 12px; outline: none; transition: border-color .2s, background .2s;
 }
-input[type=text]:focus, select:focus, textarea:focus { border-color: var(--accent); }
+input[type=text]:focus, select:focus, textarea:focus { border-color: var(--accent); background: #0d1117; }
 textarea { resize: vertical; min-height: 100px; line-height: 1.5; }
 select option { background: var(--card); }
 input[type=range] { width: 100%; accent-color: var(--accent); background: transparent; border: none; padding: 0; }
@@ -72,11 +74,11 @@ button {
   width: 100%; padding: 9px 14px; border: none; border-radius: 6px; cursor: pointer;
   font-family: inherit; font-size: 12px; font-weight: 500; letter-spacing: .5px; transition: all .2s;
 }
-.btn-p { background: linear-gradient(135deg, var(--accent), #4f46e5); color: #fff; box-shadow: 0 0 18px rgba(108,99,255,.3); }
-.btn-p:hover { box-shadow: 0 0 28px rgba(108,99,255,.55); transform: translateY(-1px); }
+.btn-p { background: var(--accent); color: #041311; box-shadow: 0 10px 24px rgba(20,184,166,.16); }
+.btn-p:hover { background: #2dd4bf; transform: translateY(-1px); }
 .btn-p:disabled { opacity: .5; transform: none; cursor: wait; }
-.btn-s { background: var(--border); color: var(--text); }
-.btn-s:hover { background: #1c1c35; }
+.btn-s { background: var(--soft); color: var(--text); border: 1px solid var(--border); }
+.btn-s:hover { background: #263241; }
 .btn-s:disabled { opacity: .5; cursor: wait; }
 .btn-g { background: rgba(166,227,161,.12); color: var(--green); border: 1px solid rgba(166,227,161,.3); }
 .btn-g:hover { background: rgba(166,227,161,.22); }
@@ -84,17 +86,17 @@ button {
 
 .algo-row { display: flex; gap: 5px; }
 .algo-btn { flex: 1; padding: 7px 4px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg); color: var(--muted); font-size: 10px; cursor: pointer; text-align: center; transition: all .2s; letter-spacing: .5px; font-family: inherit; }
-.algo-btn.on { border-color: var(--accent); color: var(--accent); background: rgba(108,99,255,.12); }
+.algo-btn.on { border-color: var(--accent); color: var(--accent); background: rgba(20,184,166,.12); }
 
 .legend { display: flex; flex-direction: column; gap: 5px; }
 .leg-row { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--muted); }
 .dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
 
-/* ── RESULTS ── */
+/*  RESULTS  */
 .results { display: flex; flex-direction: column; gap: 7px; }
-.rcard { background: var(--bg); border: 1px solid var(--border); border-radius: 7px; padding: 10px 12px; animation: fadeUp .25s ease; }
+.rcard { background: var(--card); border: 1px solid var(--border); border-radius: 7px; padding: 11px 12px; animation: fadeUp .25s ease; }
 @keyframes fadeUp { from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:translateY(0)} }
-.rcard:hover { border-color: #252545; }
+.rcard:hover { border-color: #3a4654; }
 .rrank { font-size: 9px; color: var(--muted); letter-spacing: 1px; margin-bottom: 3px; }
 .rmeta { font-size: 12px; line-height: 1.4; margin-bottom: 6px; }
 .rfoot { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
@@ -103,8 +105,8 @@ button {
 .del   { background: rgba(243,139,168,.12); color: var(--red); border: 1px solid rgba(243,139,168,.25); border-radius: 4px; cursor: pointer; font-size: 10px; padding: 2px 7px; font-family: inherit; transition: background .2s; width: auto; }
 .del:hover { background: rgba(243,139,168,.25); }
 
-/* ── LATENCY / BENCH / LAYERS ── */
-.lat-big { font-size: 32px; font-weight: 600; color: var(--cs); text-shadow: 0 0 20px rgba(0,217,255,.4); }
+/*  LATENCY / BENCH / LAYERS  */
+.lat-big { font-size: 32px; font-weight: 600; color: var(--cs); }
 .lat-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
 .bench { display: flex; flex-direction: column; gap: 9px; }
 .brow  { display: flex; flex-direction: column; gap: 3px; }
@@ -119,65 +121,74 @@ button {
 .lcount { width: 80px; text-align: right; color: var(--muted); }
 #vecCvs { display: block; width: 100%; background: var(--bg); border-radius: 5px; }
 
-/* ── DOCUMENT LIST ── */
+/*  DOCUMENT LIST  */
 .doc-list { display: flex; flex-direction: column; gap: 7px; }
-.dcard { background: var(--bg); border: 1px solid var(--border); border-radius: 7px; padding: 10px 12px; animation: fadeUp .25s ease; }
+.dcard { background: var(--card); border: 1px solid var(--border); border-radius: 7px; padding: 10px 12px; animation: fadeUp .25s ease; }
 .dcard-title { font-size: 12px; font-weight: 500; margin-bottom: 4px; color: var(--green); }
 .dcard-preview { font-size: 10px; color: var(--muted); line-height: 1.5; margin-bottom: 6px; }
 .dcard-foot { display: flex; justify-content: space-between; align-items: center; }
 .dcard-words { font-size: 9px; color: var(--muted); }
 
-/* ── OLLAMA STATUS ── */
+/*  OLLAMA STATUS  */
 .ollama-status { background: var(--bg); border: 1px solid var(--border); border-radius: 7px; padding: 10px 12px; font-size: 11px; line-height: 1.6; }
 .ollama-status.ok { border-color: rgba(166,227,161,.3); }
 .ollama-status.err { border-color: rgba(243,139,168,.3); }
 
-/* ── CHAT ── */
+/*  CHAT  */
 .chat-history { display: flex; flex-direction: column; gap: 12px; }
-.chat-q { background: rgba(108,99,255,.12); border: 1px solid rgba(108,99,255,.25); border-radius: 7px; padding: 10px 12px; font-size: 12px; line-height: 1.5; }
-.chat-a { background: var(--bg); border: 1px solid var(--border); border-radius: 7px; padding: 12px; }
+.chat-q { background: rgba(20,184,166,.12); border: 1px solid rgba(20,184,166,.26); border-radius: 7px; padding: 10px 12px; font-size: 12px; line-height: 1.5; }
+.chat-a { background: var(--card); border: 1px solid var(--border); border-radius: 7px; padding: 12px; }
 .chat-a-label { font-size: 9px; letter-spacing: 2px; color: var(--green); margin-bottom: 6px; }
 .chat-a-text { font-size: 12px; line-height: 1.7; white-space: pre-wrap; }
 .chat-ctx { margin-top: 10px; border-top: 1px solid var(--border); padding-top: 8px; }
 .chat-ctx-label { font-size: 9px; letter-spacing: 1px; color: var(--muted); margin-bottom: 6px; }
-.ctx-chip { display: inline-block; font-size: 9px; padding: 2px 7px; border-radius: 10px; margin: 2px; background: rgba(108,99,255,.1); border: 1px solid rgba(108,99,255,.2); color: var(--accent); cursor: pointer; }
-.ctx-chip:hover { background: rgba(108,99,255,.2); }
-.ctx-expand { display: none; font-size: 10px; color: var(--muted); line-height: 1.5; margin-top: 6px; padding: 8px; background: #0a0a18; border-radius: 5px; }
+.ctx-chip { display: inline-block; font-size: 9px; padding: 2px 7px; border-radius: 10px; margin: 2px; background: rgba(20,184,166,.1); border: 1px solid rgba(20,184,166,.22); color: var(--accent); cursor: pointer; }
+.ctx-chip:hover { background: rgba(20,184,166,.2); }
+.ctx-expand { display: none; font-size: 10px; color: var(--muted); line-height: 1.5; margin-top: 6px; padding: 8px; background: var(--bg); border-radius: 5px; }
 .thinking { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--muted); }
 .spinner { width: 14px; height: 14px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; flex-shrink: 0; }
 @keyframes spin { to { transform: rotate(360deg); } }
-.typing::after { content: '▋'; animation: blink 1s step-end infinite; }
+.typing::after { content: '|'; animation: blink 1s step-end infinite; }
 @keyframes blink { 50% { opacity: 0; } }
 
-/* ── TOOLTIP ── */
-#tip { position: fixed; display: none; background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 7px 11px; font-size: 11px; pointer-events: none; max-width: 220px; z-index: 200; line-height: 1.5; }
+/*  TOOLTIP  */
+#tip { position: fixed; display: none; background: var(--card); border: 1px solid var(--border); border-radius: 6px; padding: 7px 11px; font-size: 11px; pointer-events: none; max-width: 240px; z-index: 200; line-height: 1.5; box-shadow: 0 12px 30px rgba(0,0,0,.28); }
 
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+@media (max-width: 1080px) {
+  body { overflow: auto; height: auto; min-height: 100vh; }
+  header { flex-wrap: wrap; }
+  .layout { flex-direction: column; overflow: visible; }
+  .left-panel, .right-panel { width: 100%; border: 0; border-bottom: 1px solid var(--border); }
+  .center-panel { min-height: 520px; }
+  #statsLabel { width: 100%; margin-left: 0; }
+}
 </style>
 </head>
 <body>
 
 <header>
   <h1>MY-AI</h1>
-  <span class="badge" style="border-color:#4a4a6a;color:#6a6a8a">Pratham Raj · NIT Patna</span>
+  <span class="badge" style="border-color:#3a4654;color:#aab4c0">Pratham Raj - NIT Patna</span>
   <span class="badge hl">HNSW</span>
   <span class="badge">KD-TREE</span>
   <span class="badge">BRUTE FORCE</span>
-  <span class="badge" id="ollamaBadge">OLLAMA…</span>
-  <span id="statsLabel">loading…</span>
+  <span class="badge" id="ollamaBadge">OLLAMA...</span>
+  <span id="statsLabel">loading...</span>
 </header>
 
 <div class="layout">
 
-  <!-- ══ LEFT PANEL ══ -->
+  <!--  LEFT PANEL  -->
   <div class="left-panel">
     <div>
       <div class="sec">Query (Demo Vectors)</div>
       <div style="display:flex;flex-direction:column;gap:6px">
-        <input type="text" id="qInput" placeholder="binary tree, sushi, basketball…" />
-        <button class="btn-p" onclick="runSearch()">⚡ SEARCH</button>
+        <input type="text" id="qInput" placeholder="binary tree, sushi, basketball..." />
+        <button class="btn-p" onclick="runSearch()">SEARCH</button>
       </div>
     </div>
     <div>
@@ -214,7 +225,7 @@ button {
     <div>
       <div class="sec">Insert Demo Vector</div>
       <div style="display:flex;flex-direction:column;gap:6px">
-        <input type="text" id="addMeta" placeholder="Description…" />
+        <input type="text" id="addMeta" placeholder="Description..." />
         <select id="addCat">
           <option value="cs">CS / Algorithms</option>
           <option value="math">Mathematics</option>
@@ -226,14 +237,14 @@ button {
     </div>
     <div>
       <div class="sec">Benchmark</div>
-      <button class="btn-s" onclick="runBenchmark()">▶ COMPARE ALL ALGOS</button>
+      <button class="btn-s" onclick="runBenchmark()">COMPARE ALL ALGOS</button>
     </div>
   </div>
 
-  <!-- ══ CENTER: SCATTER PLOT ══ -->
+  <!--  CENTER: SCATTER PLOT  -->
   <div class="center-panel"><canvas id="scatter"></canvas></div>
 
-  <!-- ══ RIGHT PANEL: TABS ══ -->
+  <!--  RIGHT PANEL: TABS  -->
   <div class="right-panel">
     <div class="tabs">
       <div class="tab on"  onclick="switchTab('search')">SEARCH</div>
@@ -245,13 +256,13 @@ button {
     <div class="tab-content on" id="tab-search">
       <div>
         <div class="sec">Search Latency</div>
-        <div class="lat-big" id="latBig">—</div>
+        <div class="lat-big" id="latBig">--</div>
         <div class="lat-sub" id="latSub">No query yet</div>
       </div>
       <div>
         <div class="sec">Top Matches</div>
         <div class="results" id="results">
-          <div style="color:var(--muted);font-size:11px">Run a search to see results…</div>
+          <div style="color:var(--muted);font-size:11px">Run a search to see results.</div>
         </div>
       </div>
       <div>
@@ -265,7 +276,7 @@ button {
       <div>
         <div class="sec">HNSW Graph Layers</div>
         <div class="layers" id="layers">
-          <div style="color:var(--muted);font-size:11px">Loading…</div>
+          <div style="color:var(--muted);font-size:11px">Loading...</div>
         </div>
       </div>
     </div>
@@ -274,14 +285,14 @@ button {
     <div class="tab-content" id="tab-docs">
       <div>
         <div class="sec">Ollama Status</div>
-        <div class="ollama-status" id="ollamaStatus">Checking…</div>
+        <div class="ollama-status" id="ollamaStatus">Checking...</div>
       </div>
       <div>
         <div class="sec">Insert Document</div>
         <div style="display:flex;flex-direction:column;gap:8px">
-          <input type="text" id="docTitle" placeholder="Document title / topic…" />
-          <textarea id="docText" placeholder="Paste your notes, textbook excerpt, lecture content…&#10;&#10;Long text is automatically split into overlapping chunks and each chunk gets its own real embedding via Ollama's nomic-embed-text model."></textarea>
-          <button class="btn-g" id="insertDocBtn" onclick="insertDocument()">⚡ EMBED &amp; INSERT</button>
+          <input type="text" id="docTitle" placeholder="Document title / topic..." />
+          <textarea id="docText" placeholder="Paste notes, textbook excerpts, or lecture content.&#10;&#10;Long text is automatically split into overlapping chunks and each chunk gets a real embedding from Ollama's nomic-embed-text model."></textarea>
+          <button class="btn-g" id="insertDocBtn" onclick="insertDocument()">EMBED &amp; INSERT</button>
           <div id="insertStatus" style="font-size:11px;color:var(--muted)"></div>
         </div>
       </div>
@@ -298,14 +309,14 @@ button {
       <div>
         <div class="sec">Ask a Question</div>
         <div style="display:flex;flex-direction:column;gap:8px">
-          <textarea id="ragQuestion" rows="3" placeholder="What is dynamic programming?&#10;Explain the main idea of HNSW.&#10;How does the recipe differ from…"></textarea>
+          <textarea id="ragQuestion" rows="3" placeholder="What is dynamic programming?&#10;Explain the main idea of HNSW.&#10;Summarize the document I inserted."></textarea>
           <div style="display:flex;gap:6px">
             <select id="ragK" style="width:auto;flex-shrink:0">
               <option value="2">Top 2</option>
               <option value="3" selected>Top 3</option>
               <option value="5">Top 5</option>
             </select>
-            <button class="btn-g" id="askBtn" onclick="askAI()" style="flex:1">🤖 ASK AI</button>
+            <button class="btn-g" id="askBtn" onclick="askAI()" style="flex:1">ASK AI</button>
           </div>
           <div style="font-size:10px;color:var(--muted)">Uses your inserted documents as context. Answers come from the local LLM.</div>
         </div>
@@ -313,7 +324,7 @@ button {
       <div>
         <div class="sec">Conversation</div>
         <div class="chat-history" id="chatHistory">
-          <div style="color:var(--muted);font-size:11px">Ask a question about your inserted documents…</div>
+          <div style="color:var(--muted);font-size:11px">Ask a question about your inserted documents.</div>
         </div>
       </div>
     </div>
@@ -324,9 +335,9 @@ button {
 <div id="tip"></div>
 
 <script>
-// ════════════════════════════════════════════════════════════
+// 
 //  CONSTANTS
-// ════════════════════════════════════════════════════════════
+// 
 const API  = window.location.origin || 'http://localhost:8080';
 const DIMS = 16;
 
@@ -334,19 +345,19 @@ function escapeHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;')
     .replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
-const COL  = { cs:'#00d9ff', math:'#b388ff', food:'#ffb74d', sports:'#69f0ae', doc:'#a6e3a1', default:'#90a4ae' };
-const DIM_COL = ['#00d9ff','#00d9ff','#00d9ff','#00d9ff','#b388ff','#b388ff','#b388ff','#b388ff',
-                 '#ffb74d','#ffb74d','#ffb74d','#ffb74d','#69f0ae','#69f0ae','#69f0ae','#69f0ae'];
+const COL  = { cs:'#38bdf8', math:'#a78bfa', food:'#f59e0b', sports:'#22c55e', doc:'#34d399', default:'#90a4ae' };
+const DIM_COL = ['#38bdf8','#38bdf8','#38bdf8','#38bdf8','#a78bfa','#a78bfa','#a78bfa','#a78bfa',
+                 '#f59e0b','#f59e0b','#f59e0b','#f59e0b','#22c55e','#22c55e','#22c55e','#22c55e'];
 
-// ════════════════════════════════════════════════════════════
+// 
 //  STATE
-// ════════════════════════════════════════════════════════════
+// 
 let allItems = [], pcaPoints = [], hitIds = new Set(), queryPt = null;
 let hoverItem = null, pulse = 0, selAlgo = 'hnsw', searchResults = [];
 
-// ════════════════════════════════════════════════════════════
+// 
 //  TABS
-// ════════════════════════════════════════════════════════════
+// 
 function switchTab(name) {
   document.querySelectorAll('.tab').forEach((t,i) => {
     const names = ['search','docs','rag'];
@@ -357,9 +368,9 @@ function switchTab(name) {
   if (name === 'docs') loadDocList();
 }
 
-// ════════════════════════════════════════════════════════════
-//  TEXT → 16-D EMBEDDING (for demo vectors)
-// ════════════════════════════════════════════════════════════
+// 
+//  TEXT  16-D EMBEDDING (for demo vectors)
+// 
 const KW = {
   cs:     ['algorithm','data','tree','graph','array','linked','hash','stack','queue','sort','binary','dynamic','programming','recursion','complexity','pointer','node','search','insert','bfs','dfs','heap','trie'],
   math:   ['calculus','matrix','probability','theorem','integral','derivative','linear','algebra','equation','function','prime','modular','combinatorics','permutation','eigenvalue','statistics','proof'],
@@ -387,9 +398,9 @@ function textToEmbedding(text) {
   return emb;
 }
 
-// ════════════════════════════════════════════════════════════
+// 
 //  PCA
-// ════════════════════════════════════════════════════════════
+// 
 function pca2D(embs) {
   const n = embs.length, d = embs[0].length;
   if (n < 2) return embs.map(() => [0,0]);
@@ -417,9 +428,9 @@ function pca2D(embs) {
   return X.map(x=>[x.reduce((s,v,i)=>s+v*pc1[i],0),x.reduce((s,v,i)=>s+v*pc2[i],0)]);
 }
 
-// ════════════════════════════════════════════════════════════
+// 
 //  SCATTER PLOT
-// ════════════════════════════════════════════════════════════
+// 
 const sc=document.getElementById('scatter'), ctx=sc.getContext('2d');
 let bounds={minX:-1,maxX:1,minY:-1,maxY:1};
 
@@ -433,25 +444,25 @@ function w2c(wx,wy) {
 
 function drawFrame() {
   ctx.clearRect(0,0,sc.width,sc.height);
-  ctx.fillStyle='#07070f'; ctx.fillRect(0,0,sc.width,sc.height);
-  ctx.strokeStyle='#0e0e1e'; ctx.lineWidth=1;
+  ctx.fillStyle='#090b0f'; ctx.fillRect(0,0,sc.width,sc.height);
+  ctx.strokeStyle='#17202a'; ctx.lineWidth=1;
   for (let i=0;i<=8;i++) {
     const tx=70+(i/8)*(sc.width-140),ty=70+(i/8)*(sc.height-140);
     ctx.beginPath();ctx.moveTo(tx,70);ctx.lineTo(tx,sc.height-70);ctx.stroke();
     ctx.beginPath();ctx.moveTo(70,ty);ctx.lineTo(sc.width-70,ty);ctx.stroke();
   }
-  ctx.fillStyle='#1a1a38'; ctx.font='11px Fira Code,monospace';
-  ctx.fillText('PC₁ →',sc.width/2-40,sc.height-18);
-  ctx.save();ctx.translate(18,sc.height/2+50);ctx.rotate(-Math.PI/2);ctx.fillText('PC₂ →',0,0);ctx.restore();
-  ctx.fillStyle='#151530'; ctx.font='12px Fira Code,monospace';
-  ctx.fillText('2D PCA Projection  ·  Semantic Space',80,28);
+  ctx.fillStyle='#607080'; ctx.font='11px Fira Code,monospace';
+  ctx.fillText('PC1 ->',sc.width/2-40,sc.height-18);
+  ctx.save();ctx.translate(18,sc.height/2+50);ctx.rotate(-Math.PI/2);ctx.fillText('PC2 ->',0,0);ctx.restore();
+  ctx.fillStyle='#8090a0'; ctx.font='12px Fira Code,monospace';
+  ctx.fillText('2D PCA Projection - Semantic Space',80,28);
 
   if (queryPt && hitIds.size>0) {
     const [qx,qy]=w2c(queryPt.x,queryPt.y);
     for (const pt of pcaPoints) {
       if (!hitIds.has(pt.item.id)) continue;
       const [px,py]=w2c(pt.x,pt.y);
-      ctx.strokeStyle='rgba(108,99,255,0.18)'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+      ctx.strokeStyle='rgba(20,184,166,0.24)'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
       ctx.beginPath();ctx.moveTo(qx,qy);ctx.lineTo(px,py);ctx.stroke();
       ctx.setLineDash([]);
     }
@@ -481,11 +492,11 @@ function drawFrame() {
     for (let i=0;i<10;i++){const a=(i*Math.PI/5)-Math.PI/2,rr=i%2===0?13:5;if(i===0)ctx.moveTo(Math.cos(a)*rr,Math.sin(a)*rr);else ctx.lineTo(Math.cos(a)*rr,Math.sin(a)*rr);}
     ctx.closePath();ctx.fillStyle='#fff';ctx.fill();
     ctx.shadowBlur=0;ctx.restore();
-    ctx.fillStyle='#aaaacc';ctx.font='10px Fira Code,monospace';ctx.fillText('query',qx+16,qy+4);
+    ctx.fillStyle='#c8d2dc';ctx.font='10px Fira Code,monospace';ctx.fillText('query',qx+16,qy+4);
   }
   if (!pcaPoints.length) {
-    ctx.fillStyle='#1a1a38';ctx.font='13px Fira Code,monospace';ctx.textAlign='center';
-    ctx.fillText('Connecting to MY-AI…',sc.width/2,sc.height/2);ctx.textAlign='left';
+    ctx.fillStyle='#8090a0';ctx.font='13px Fira Code,monospace';ctx.textAlign='center';
+    ctx.fillText('Connecting to MY-AI...',sc.width/2,sc.height/2);ctx.textAlign='left';
   }
   pulse+=0.05;
   requestAnimationFrame(drawFrame);
@@ -507,9 +518,9 @@ sc.addEventListener('mousemove', e => {
 });
 sc.addEventListener('mouseleave',()=>{hoverItem=null;document.getElementById('tip').style.display='none';});
 
-// ════════════════════════════════════════════════════════════
+// 
 //  LOAD DEMO ITEMS
-// ════════════════════════════════════════════════════════════
+// 
 async function loadItems() {
   try {
     const r = await fetch(API+'/items');
@@ -522,13 +533,13 @@ async function loadItems() {
       const px=(x1-x0)*.18||.1,py=(y1-y0)*.18||.1;
       bounds={minX:x0-px,maxX:x1+px,minY:y0-py,maxY:y1+py};
     }
-    document.getElementById('statsLabel').textContent=allItems.length+' vectors · '+DIMS+' dims';
+    document.getElementById('statsLabel').textContent=allItems.length+' vectors - '+DIMS+' dims';
   } catch(_) {}
 }
 
-// ════════════════════════════════════════════════════════════
+// 
 //  DEMO SEARCH
-// ════════════════════════════════════════════════════════════
+// 
 function setHover(id) {
   const pt = pcaPoints.find(p => p.item.id === id);
   if (pt) hoverItem = pt.item;
@@ -548,10 +559,10 @@ async function runSearch() {
     const r=await fetch(url), data=await r.json();
     if (data.error) { alert(data.error); return; }
     searchResults=data.results||[]; hitIds=new Set(searchResults.map(r=>r.id));
-    if (data.warning) document.getElementById('latSub').textContent+= '  ·  ⚠ '+data.warning;
+    const warning = data.warning ? ' - Warning: '+data.warning : '';
     const us=data.latencyUs||0;
-    document.getElementById('latBig').textContent=us<1000?us+' μs':(us/1000).toFixed(2)+' ms';
-    document.getElementById('latSub').textContent=selAlgo.toUpperCase()+'  ·  '+metric+'  ·  k='+k;
+    document.getElementById('latBig').textContent=us<1000?us+' us':(us/1000).toFixed(2)+' ms';
+    document.getElementById('latSub').textContent=selAlgo.toUpperCase()+' - '+metric+' - k='+k+warning;
     if (searchResults.length>0){
       let sx=0,sy=0,sw=0;
       for (let i=0;i<Math.min(3,searchResults.length);i++){
@@ -561,7 +572,7 @@ async function runSearch() {
       if(sw>0)queryPt={x:sx/sw+(Math.random()-.5)*.015,y:sy/sw+(Math.random()-.5)*.015};
     }
     renderResults(searchResults); drawVecChart(emb);
-  } catch(_){alert('Cannot reach server — is it running on :8080?');}
+  } catch(_){alert('Cannot reach server. Is it running on :8080?');}
 }
 
 document.getElementById('qInput').addEventListener('keydown',e=>{if(e.key==='Enter')runSearch();});
@@ -577,7 +588,7 @@ function renderResults(results) {
       <div class="rfoot">
         <span class="rcat" style="background:${col}18;color:${col};border:1px solid ${col}44">${r.category.toUpperCase()}</span>
         <span class="rdist">dist: ${r.distance.toFixed(5)}</span>
-        <button class="del" onclick="deleteItem(${r.id})">✕</button>
+        <button class="del" onclick="deleteItem(${r.id})">x</button>
       </div>
     </div>`;
   }).join('');
@@ -612,7 +623,7 @@ async function runBenchmark() {
       {lbl:'KD-Tree',    us:d.kdtreeUs,    col:'#89dceb'},
       {lbl:'HNSW',       us:d.hnswUs,      col:'#b388ff'},
     ].map(({lbl,us,col})=>{
-      const pct=Math.max((us/mx)*100,2),disp=us<1000?us+' μs':(us/1000).toFixed(2)+' ms';
+      const pct=Math.max((us/mx)*100,2),disp=us<1000?us+' us':(us/1000).toFixed(2)+' ms';
       return `<div class="brow"><div class="blabel"><span style="color:${col}">${lbl}</span><span style="color:var(--muted)">${disp}</span></div><div class="btrack"><div class="bfill" style="width:${pct}%;background:${col}"></div></div></div>`;
     }).join('');
   } catch(_) {}
@@ -624,7 +635,7 @@ async function loadHNSW() {
     const maxN=d.nodesPerLayer[0]||1;
     document.getElementById('layers').innerHTML=d.nodesPerLayer.map((cnt,lyr)=>{
       const pct=Math.max((cnt/maxN)*100,2),edg=d.edgesPerLayer[lyr]||0;
-      return `<div class="lrow"><div class="lnum">L${lyr}</div><div class="ltrack"><div class="lfill" style="width:${pct}%"></div></div><div class="lcount">${cnt}n · ${edg}e</div></div>`;
+      return `<div class="lrow"><div class="lnum">L${lyr}</div><div class="ltrack"><div class="lfill" style="width:${pct}%"></div></div><div class="lcount">${cnt}n / ${edg}e</div></div>`;
     }).join('')||'<div style="color:var(--muted);font-size:11px">Empty</div>';
   } catch(_) {}
 }
@@ -648,26 +659,26 @@ async function deleteItem(id) {
   } catch(_) {}
 }
 
-// ════════════════════════════════════════════════════════════
+// 
 //  DOCUMENT MANAGEMENT
-// ════════════════════════════════════════════════════════════
+// 
 async function checkOllamaStatus() {
   try {
     const r=await fetch(API+'/status'), d=await r.json();
     const badge=document.getElementById('ollamaBadge');
     const box=document.getElementById('ollamaStatus');
     if (d.ollamaAvailable) {
-      badge.className='badge ok'; badge.textContent='OLLAMA ✓';
+      badge.className='badge ok'; badge.textContent='OLLAMA OK';
       box.className='ollama-status ok';
-      box.innerHTML=`<span style="color:var(--green)">● Online</span><br>`+
+      box.innerHTML=`<span style="color:var(--green)">Online</span><br>`+
         `Embed: <span style="color:var(--accent)">${d.embedModel}</span><br>`+
         `Generate: <span style="color:var(--accent)">${d.genModel}</span><br>`+
         `Dims: <span style="color:var(--muted)">${d.docDims||'(first insert sets this)'}</span><br>`+
         `Documents: <span style="color:var(--text)">${d.docCount}</span>`;
     } else {
-      badge.className='badge err'; badge.textContent='OLLAMA ✗';
+      badge.className='badge err'; badge.textContent='OLLAMA OFF';
       box.className='ollama-status err';
-      box.innerHTML=`<span style="color:var(--red)">● Offline</span><br><br>`+
+      box.innerHTML=`<span style="color:var(--red)">Offline</span><br><br>`+
         `To enable RAG features:<br>`+
         `<span style="color:var(--muted)">1. Install from ollama.com<br>`+
         `2. ollama pull nomic-embed-text<br>`+
@@ -681,10 +692,10 @@ async function insertDocument() {
   const text=document.getElementById('docText').value.trim();
   const btn=document.getElementById('insertDocBtn');
   const status=document.getElementById('insertStatus');
-  if(!title||!text){status.textContent='⚠ Need both a title and text.';return;}
+  if(!title||!text){status.textContent='Need both a title and text.';return;}
 
-  btn.disabled=true; btn.textContent='Embedding…';
-  status.innerHTML='<span style="color:var(--muted)">Calling Ollama nomic-embed-text…</span>';
+  btn.disabled=true; btn.textContent='Embedding...';
+  status.innerHTML='<span style="color:var(--muted)">Calling Ollama nomic-embed-text...</span>';
 
   try {
     const r=await fetch(API+'/doc/insert',{
@@ -693,9 +704,9 @@ async function insertDocument() {
     });
     const d=await r.json();
     if (d.error) {
-      status.innerHTML=`<span style="color:var(--red)">✗ ${d.error}</span>`;
+      status.innerHTML=`<span style="color:var(--red)">Error: ${d.error}</span>`;
     } else {
-      status.innerHTML=`<span style="color:var(--green)">✓ Inserted ${d.chunks} chunk(s) · ${d.dims}D embeddings</span>`;
+      status.innerHTML=`<span style="color:var(--green)">Inserted ${d.chunks} chunk(s) - ${d.dims}D embeddings</span>`;
       document.getElementById('docTitle').value='';
       document.getElementById('docText').value='';
 
@@ -709,9 +720,9 @@ async function insertDocument() {
       loadDocList(); checkOllamaStatus();
     }
   } catch(_) {
-    status.innerHTML='<span style="color:var(--red)">✗ Server error</span>';
+    status.innerHTML='<span style="color:var(--red)">Server error</span>';
   }
-  btn.disabled=false; btn.textContent='⚡ EMBED & INSERT';
+  btn.disabled=false; btn.textContent='EMBED & INSERT';
 }
 
 async function loadDocList() {
@@ -728,7 +739,7 @@ async function loadDocList() {
         <div class="dcard-preview">${escapeHtml(d.preview)}</div>
         <div class="dcard-foot">
           <span class="dcard-words">${d.words} words</span>
-          <button class="del" onclick="deleteDoc(${d.id})">✕</button>
+          <button class="del" onclick="deleteDoc(${d.id})">x</button>
         </div>
       </div>`).join('');
   } catch(_) {}
@@ -741,9 +752,9 @@ async function deleteDoc(id) {
   } catch(_) {}
 }
 
-// ════════════════════════════════════════════════════════════
-//  RAG  — Ask AI
-// ════════════════════════════════════════════════════════════
+// 
+//  RAG   Ask AI
+// 
 document.getElementById('ragQuestion').addEventListener('keydown',e=>{
   if(e.key==='Enter'&&e.ctrlKey)askAI();
 });
@@ -753,7 +764,7 @@ async function askAI() {
   if(!question)return;
   const k=parseInt(document.getElementById('ragK').value);
   const btn=document.getElementById('askBtn');
-  btn.disabled=true; btn.textContent='Thinking…';
+  btn.disabled=true; btn.textContent='Thinking...';
 
   const history=document.getElementById('chatHistory');
   // Clear previous conversation
@@ -765,7 +776,7 @@ async function askAI() {
 
   // Show thinking indicator
   const thinkDiv=document.createElement('div'); thinkDiv.className='thinking';
-  thinkDiv.innerHTML='<div class="spinner"></div>Retrieving context & generating answer…';
+  thinkDiv.innerHTML='<div class="spinner"></div>Retrieving context and generating answer...';
   history.appendChild(thinkDiv);
   history.scrollTop=history.scrollHeight;
 
@@ -821,11 +832,11 @@ async function askAI() {
       aDiv.innerHTML=`<div class="chat-a-label">ERROR</div><div class="chat-a-text" style="color:var(--red)">${d.error}</div>`;
     } else {
       // Build answer block with typewriter
-      aDiv.innerHTML=`<div class="chat-a-label">🤖 ${d.model||'llm'}</div>`+
+      aDiv.innerHTML=`<div class="chat-a-label">${d.model||'llm'}</div>`+
         `<div class="chat-a-text" id="typeTarget"></div>`+
         `<div class="chat-ctx">`+
           `<div class="chat-ctx-label">RETRIEVED CONTEXT (${d.contexts.length} chunks)</div>`+
-          d.contexts.map((c,i)=>`<span class="ctx-chip" onclick="toggleCtx(${i})">#${i+1} ${escapeHtml(c.title)} · ${c.distance.toFixed(3)}</span>`+
+          d.contexts.map((c,i)=>`<span class="ctx-chip" onclick="toggleCtx(${i})">#${i+1} ${escapeHtml(c.title)} - ${c.distance.toFixed(3)}</span>`+
             `<div class="ctx-expand" id="ctx-${i}">${escapeHtml(c.text)}</div>`).join('')+
         `</div>`;
       history.appendChild(aDiv);
@@ -847,12 +858,12 @@ async function askAI() {
   } catch(e) {
     thinkDiv.remove();
     const err=document.createElement('div');err.className='chat-a';
-    err.innerHTML='<div class="chat-a-label">ERROR</div><div class="chat-a-text" style="color:var(--red)">Server error — is the backend running?</div>';
+    err.innerHTML='<div class="chat-a-label">ERROR</div><div class="chat-a-text" style="color:var(--red)">Server error. Is the backend running?</div>';
     history.appendChild(err);
   }
 
   document.getElementById('ragQuestion').value='';
-  btn.disabled=false; btn.textContent='🤖 ASK AI';
+  btn.disabled=false; btn.textContent='ASK AI';
   history.scrollTop=history.scrollHeight;
 }
 
@@ -861,9 +872,9 @@ function toggleCtx(i) {
   el.style.display=el.style.display==='block'?'none':'block';
 }
 
-// ════════════════════════════════════════════════════════════
+// 
 //  BOOT
-// ════════════════════════════════════════════════════════════
+// 
 resize(); drawFrame();
 loadItems().then(loadHNSW);
 checkOllamaStatus();
