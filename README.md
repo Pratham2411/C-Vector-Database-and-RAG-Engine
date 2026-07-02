@@ -1,6 +1,6 @@
 <div align="center">
   
-# 🧠 MY-AI: C++ Vector Database & RAG Engine
+# 🧠 C++ Vector Database & RAG Engine
 
 **A highly-optimized, from-scratch Vector Search & Retrieval-Augmented Generation (RAG) engine.**
 
@@ -14,7 +14,7 @@
 <br/>
 
 <!-- 💡 TODO: Add your screen recording GIF here! -->
-<!-- <img src="./assets/demo.gif" alt="MY-AI Demo" width="800"/> -->
+<!-- <img src="./assets/demo.gif" alt="Vector DB Demo" width="800"/> -->
 
 </div>
 
@@ -22,7 +22,7 @@
 
 ## 📖 Project Overview
 
-**MY-AI** is a portfolio-grade systems engineering project that demonstrates deep knowledge of data structures, algorithms, memory management, and modern AI pipelines. Instead of relying on a hosted cloud vector database (like Pinecone or Weaviate), **this project implements the core vector indexing algorithms completely from scratch in C++17.**
+**This C++ Vector Database** is a portfolio-grade systems engineering project that demonstrates deep knowledge of data structures, algorithms, memory management, and modern AI pipelines. Instead of relying on a hosted cloud vector database (like Pinecone or Weaviate), **this project implements the core vector indexing algorithms completely from scratch in C++17.**
 
 It features a dual-plane architecture:
 1. **Vector Engine:** 16-dimensional semantic search utilizing custom **HNSW (Hierarchical Navigable Small World)** graphs, **KD-Trees**, and exact Brute Force K-NN search.
@@ -47,27 +47,27 @@ Everything is exposed via a lightweight REST API and visualized through a modern
 ```mermaid
 flowchart LR
     subgraph Frontend["Browser UI"]
-        Dashboard[PCA Dashboard]
-        Chat[RAG Chat Interface]
+        Dashboard["PCA Dashboard"]
+        Chat["RAG Chat Interface"]
     end
 
     subgraph Backend["C++ REST API Server"]
-        API[HTTP Routes]
+        API["HTTP Routes"]
         
         subgraph Storage["Vector Stores (Readers-Writer Locks)"]
-            DocDB[Document DB<br/>(768D)]
-            VecDB[Demo Vector DB<br/>(16D)]
+            DocDB["Document DB<br/>(768D)"]
+            VecDB["Demo Vector DB<br/>(16D)"]
         end
         
         subgraph Indexes["Algorithms"]
-            HNSW[HNSW Graph]
-            KD[KD-Tree]
-            BF[Brute Force]
+            HNSW["HNSW Graph"]
+            KD["KD-Tree"]
+            BF["Brute Force"]
         end
     end
 
     subgraph External["Local AI"]
-        Ollama[Ollama<br/>llama3.2 + nomic]
+        Ollama["Ollama<br/>llama3.2 + nomic"]
     end
 
     Dashboard <-->|REST| API
@@ -97,8 +97,8 @@ ollama pull llama3.2
 ### 3. Build & Run (Docker - Recommended)
 The easiest way to run the database without setting up a C++ toolchain:
 ```bash
-docker build -t my-ai .
-docker run -p 8080:8080 my-ai
+docker build -t vector-db .
+docker run -p 8080:8080 vector-db
 ```
 
 ### 4. Build & Run (Native Windows/Linux)
