@@ -147,12 +147,10 @@ C-Vector-Database-and-RAG-Engine/
 
 ---
 
-## 📚 Detailed Documentation & Interview Prep
-
-For an extremely deep dive into the math, architecture, and design decisions behind this project—including 150+ simulated technical interview questions—please read the [PROJECT MASTER DOCUMENTATION](PROJECT_MASTER_DOCUMENTATION.md).
-
----
-
 ## ⚖️ License
 
 Distributed under the MIT License. Copyright (c) 2026 Pratham Raj.
+
+---
+
+
