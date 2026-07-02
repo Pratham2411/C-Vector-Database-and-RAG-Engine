@@ -9,7 +9,7 @@
 #include "types.hpp"
 
 #include <chrono>
-#include <mutex>
+#include <shared_mutex>
 #include <unordered_map>
 #include <utility>
 #include <vector>
@@ -21,7 +21,7 @@ class VectorDB {
     BruteForce bf;
     KDTree kdt;
     HNSW hnsw;
-    std::mutex mu;
+    mutable std::shared_mutex mu;
     int nextId = 1;
 
 public:
@@ -32,7 +32,7 @@ public:
     int insert(const std::string& meta, const std::string& cat,
                const std::vector<float>& emb, DistFn dist)
     {
-        std::lock_guard<std::mutex> lk(mu);
+        std::unique_lock<std::shared_mutex> lk(mu);
         VectorItem v{nextId++, meta, cat, emb};
         store[v.id] = v;
         bf.insert(v);
@@ -42,7 +42,7 @@ public:
     }
 
     bool remove(int id) {
-        std::lock_guard<std::mutex> lk(mu);
+        std::unique_lock<std::shared_mutex> lk(mu);
         if (!store.count(id)) return false;
         store.erase(id);
         bf.remove(id);
@@ -69,9 +69,9 @@ public:
     };
 
     SearchOut search(const std::vector<float>& q, int k,
-                     const std::string& metric, const std::string& algo)
+                     const std::string& metric, const std::string& algo) const
     {
-        std::lock_guard<std::mutex> lk(mu);
+        std::shared_lock<std::shared_mutex> lk(mu);
         k = clampK(k);
         const auto dfn = getDistFn(metric);
         const auto t0 = std::chrono::high_resolution_clock::now();
@@ -99,7 +99,7 @@ public:
     struct BenchOut { long long bfUs, kdUs, hnswUs; int n; };
 
     BenchOut benchmark(const std::vector<float>& q, int k, const std::string& metric) {
-        std::lock_guard<std::mutex> lk(mu);
+        std::shared_lock<std::shared_mutex> lk(mu);
         k = clampK(k);
         const auto dfn = getDistFn(metric);
         const auto time = [&](auto fn) -> long long {
@@ -116,8 +116,8 @@ public:
         };
     }
 
-    std::vector<VectorItem> all() {
-        std::lock_guard<std::mutex> lk(mu);
+    std::vector<VectorItem> all() const {
+        std::shared_lock<std::shared_mutex> lk(mu);
         std::vector<VectorItem> r;
         r.reserve(store.size());
         for (const auto& [id, v] : store) r.push_back(v);
@@ -125,12 +125,12 @@ public:
     }
 
     HNSW::GraphInfo hnswInfo() {
-        std::lock_guard<std::mutex> lk(mu);
+        std::shared_lock<std::shared_mutex> lk(mu);
         return hnsw.getInfo();
     }
 
-    size_t size() {
-        std::lock_guard<std::mutex> lk(mu);
+    size_t size() const {
+        std::shared_lock<std::shared_mutex> lk(mu);
         return store.size();
     }
 };

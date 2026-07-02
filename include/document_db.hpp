@@ -7,7 +7,7 @@
 #include "json_utils.hpp"
 #include "types.hpp"
 
-#include <mutex>
+#include <shared_mutex>
 #include <unordered_map>
 #include <utility>
 #include <vector>
@@ -18,7 +18,7 @@ class DocumentDB {
     std::unordered_map<int, DocItem> store;
     HNSW hnsw;
     BruteForce bf;
-    std::mutex mu;
+    mutable std::shared_mutex mu;
     int nextId = 1;
     int dims = 0;
 
@@ -28,7 +28,7 @@ public:
     int insert(const std::string& title, const std::string& text,
                const std::vector<float>& emb)
     {
-        std::lock_guard<std::mutex> lk(mu);
+        std::unique_lock<std::shared_mutex> lk(mu);
         if (emb.empty()) return -1;
         if (dims == 0) dims = static_cast<int>(emb.size());
         if (static_cast<int>(emb.size()) != dims) return -1;
@@ -44,7 +44,7 @@ public:
     std::vector<std::pair<float, DocItem>> search(
         const std::vector<float>& q, int k, float max_dist = DOC_MAX_COSINE_DIST)
     {
-        std::lock_guard<std::mutex> lk(mu);
+        std::shared_lock<std::shared_mutex> lk(mu);
         if (store.empty() || static_cast<int>(q.size()) != dims) return {};
         k = clampK(k);
         const auto raw = (store.size() < 10)
@@ -57,7 +57,7 @@ public:
     }
 
     bool remove(int id) {
-        std::lock_guard<std::mutex> lk(mu);
+        std::unique_lock<std::shared_mutex> lk(mu);
         if (!store.count(id)) return false;
         store.erase(id);
         hnsw.remove(id);
@@ -70,21 +70,21 @@ public:
         for (int id : ids) remove(id);
     }
 
-    std::vector<DocItem> all() {
-        std::lock_guard<std::mutex> lk(mu);
+    std::vector<DocItem> all() const {
+        std::shared_lock<std::shared_mutex> lk(mu);
         std::vector<DocItem> r;
         r.reserve(store.size());
         for (const auto& [id, v] : store) r.push_back(v);
         return r;
     }
 
-    size_t size() {
-        std::lock_guard<std::mutex> lk(mu);
+    size_t size() const {
+        std::shared_lock<std::shared_mutex> lk(mu);
         return store.size();
     }
 
-    int getDims() {
-        std::lock_guard<std::mutex> lk(mu);
+    int getDims() const {
+        std::shared_lock<std::shared_mutex> lk(mu);
         return dims;
     }
 };
