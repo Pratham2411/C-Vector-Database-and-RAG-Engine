@@ -191,7 +191,7 @@ flowchart LR
 ### 2.5 File Layout (Refactored)
 
 ```
-MY-AI/
+C-Vector-Database-and-RAG-Engine/
 ├── include/
 │   ├── config.hpp          # Constants, limits, metadata
 │   ├── types.hpp           # VectorItem, DocItem, DistFn

@@ -129,7 +129,7 @@ The custom implementation proves the mathematical efficiency of Approximate Near
 ## 📂 Repository Structure
 
 ```text
-MY-AI/
+C-Vector-Database-and-RAG-Engine/
 ├── include/                 # Core logic and header-only implementations
 │   ├── vector_db.hpp        # 16D Thread-safe Demo Store
 │   ├── document_db.hpp      # 768D Thread-safe RAG Store
