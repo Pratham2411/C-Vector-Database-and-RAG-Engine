@@ -1,0 +1,35 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{listings}
+
+\lstset{basicstyle=\ttfamily, breaklines=true, frame=single}
+
+\begin{document}
+
+\section*{Run}
+
+Open terminal in project folder:
+
+\begin{lstlisting}
+cd "C:\Users\prath\OneDrive\Desktop\C++ Vector Database & RAG Engine"
+.\build\db.exe
+\end{lstlisting}
+
+Open in browser: \texttt{http://localhost:8080}
+
+\section*{Stop}
+
+In the same terminal where the server is running:
+
+\begin{lstlisting}
+Ctrl + C
+\end{lstlisting}
+
+If port 8080 is stuck:
+
+\begin{lstlisting}
+netstat -ano | findstr :8080
+taskkill /PID <PID> /F
+\end{lstlisting}
+
+\end{document}

@@ -7,6 +7,7 @@
 #include "json_utils.hpp"
 #include "types.hpp"
 
+#include <mutex>
 #include <shared_mutex>
 #include <unordered_map>
 #include <utility>

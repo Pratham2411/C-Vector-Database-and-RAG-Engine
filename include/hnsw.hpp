@@ -43,7 +43,7 @@ class HNSW {
     }
 
     std::vector<std::pair<float, int>> searchLayer(
-        const std::vector<float>& q, int ep, int ef, int lyr, DistFn dist)
+        const std::vector<float>& q, int ep, int ef, int lyr, DistFn dist) const
     {
         std::unordered_map<int, bool> vis;
         std::priority_queue<std::pair<float, int>,
@@ -143,7 +143,7 @@ public:
     }
 
     std::vector<std::pair<float, int>> knn(
-        const std::vector<float>& q, int k, int ef, DistFn dist)
+        const std::vector<float>& q, int k, int ef, DistFn dist) const
     {
         if (entryPt == -1 || k <= 0) return {};
         int ep = entryPt;

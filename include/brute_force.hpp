@@ -15,7 +15,7 @@ public:
     void insert(const VectorItem& v) { items.push_back(v); }
 
     std::vector<std::pair<float, int>> knn(
-        const std::vector<float>& q, int k, DistFn dist)
+        const std::vector<float>& q, int k, DistFn dist) const
     {
         if (k <= 0 || items.empty()) return {};
         std::vector<std::pair<float, int>> r;

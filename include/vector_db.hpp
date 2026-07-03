@@ -9,6 +9,7 @@
 #include "types.hpp"
 
 #include <chrono>
+#include <mutex>
 #include <shared_mutex>
 #include <unordered_map>
 #include <utility>
@@ -90,9 +91,11 @@ public:
         out.metric = metric;
         if (algo == "kdtree" && metric != "euclidean")
             out.warning = "KD-Tree pruning is exact for Euclidean only; results may be approximate.";
-        for (const auto& [d, id] : raw)
-            if (store.count(id))
-                out.hits.push_back({id, store[id].metadata, store[id].category, store[id].emb, d});
+        for (const auto& [d, id] : raw) {
+            const auto it = store.find(id);
+            if (it != store.end())
+                out.hits.push_back({id, it->second.metadata, it->second.category, it->second.emb, d});
+        }
         return out;
     }
 

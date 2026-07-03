@@ -36,7 +36,7 @@ class KDTree {
     }
 
     void knn(KDNode* n, const std::vector<float>& q, int k, int d, DistFn dist,
-             std::priority_queue<std::pair<float, int>>& heap)
+             std::priority_queue<std::pair<float, int>>& heap) const
     {
         if (!n) return;
         const float dn = dist(q, n->item.emb);
@@ -64,7 +64,7 @@ public:
     void insert(const VectorItem& v) { root = ins(root, v, 0); }
 
     std::vector<std::pair<float, int>> knn(
-        const std::vector<float>& q, int k, DistFn dist)
+        const std::vector<float>& q, int k, DistFn dist) const
     {
         if (!root || k <= 0) return {};
         std::priority_queue<std::pair<float, int>> heap;
