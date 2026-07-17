@@ -1,35 +1,135 @@
 \documentclass[11pt]{article}
 \usepackage[margin=1in]{geometry}
 \usepackage{listings}
+\usepackage{enumitem}
 
 \lstset{basicstyle=\ttfamily, breaklines=true, frame=single}
 
 \begin{document}
 
-\section*{Run}
+\section*{How to Run This Project Locally (Windows)}
 
-Open terminal in project folder:
+Follow these steps in order. You only need to do Steps 1--3 once.
+
+\subsection*{Step 1: Install what you need}
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{C++ compiler and CMake}
+  \begin{itemize}
+    \item Install \textbf{MSYS2} or \textbf{MinGW} (for \texttt{g++}), or use \textbf{Visual Studio} with C++ tools.
+    \item Install \textbf{CMake} (version 3.16 or newer).
+    \item Make sure \texttt{g++} (or \texttt{cl}) and \texttt{cmake} work in your terminal.
+  \end{itemize}
+
+  \item \textbf{Ollama} (needed for document embedding and AI chat)
+  \begin{itemize}
+    \item Download and install from \texttt{https://ollama.com}
+    \item Open a new terminal and run:
+\begin{lstlisting}
+ollama pull nomic-embed-text
+ollama pull llama3.2
+\end{lstlisting}
+    \item Keep Ollama running in the background while you use the RAG features.
+  \end{itemize}
+\end{enumerate}
+
+\subsection*{Step 2: Open terminal in the project folder}
 
 \begin{lstlisting}
 cd "C:\Users\prath\OneDrive\Desktop\C++ Vector Database & RAG Engine"
+\end{lstlisting}
+
+\textbf{Important:} Always start the server from this folder. The web UI needs \texttt{index.html} in the current directory.
+
+\subsection*{Step 3: Build the project (first time, or after code changes)}
+
+\textbf{Option A --- CMake (recommended):}
+\begin{lstlisting}
+cmake -S . -B build
+cmake --build build --config Release
+\end{lstlisting}
+
+\textbf{Option B --- Quick build script (MinGW only):}
+\begin{lstlisting}
+build.bat
+\end{lstlisting}
+This creates \texttt{db.exe} in the project root.
+
+\subsection*{Step 4: Start the server}
+
+\textbf{If you used CMake:}
+\begin{lstlisting}
 .\build\db.exe
 \end{lstlisting}
 
-Open in browser: \texttt{http://localhost:8080}
-
-\section*{Stop}
-
-In the same terminal where the server is running:
-
+\textbf{If you used build.bat:}
 \begin{lstlisting}
-Ctrl + C
+.\db.exe
 \end{lstlisting}
 
-If port 8080 is stuck:
+You should see output like:
+\begin{lstlisting}
+=== MY-AI Engine ===
+http://localhost:8080
+... demo vectors ...
+Ollama: ONLINE (or OFFLINE)
+\end{lstlisting}
+
+Leave this terminal window open while the server is running.
+
+\subsection*{Step 5: Open the app in your browser}
+
+Go to:
+\begin{lstlisting}
+http://localhost:8080
+\end{lstlisting}
+
+The dashboard loads automatically. You can now search vectors, run benchmarks, insert documents, and ask AI questions.
+
+\subsection*{Quick test (optional)}
+
+In a \textbf{second} terminal (keep the server running in the first):
+\begin{lstlisting}
+curl http://localhost:8080/status
+\end{lstlisting}
+You should get a JSON response with project info and Ollama status.
+
+\section*{How to Stop / Close the Project}
+
+\subsection*{Normal way}
+
+\begin{enumerate}[leftmargin=*]
+  \item Go to the terminal where the server is running.
+  \item Press \textbf{Ctrl + C}.
+  \item Wait until the process exits and you get your command prompt back.
+  \item Close the browser tab if you want.
+\end{enumerate}
+
+That is all. You do not need to stop Ollama unless you want to free memory.
+
+\subsection*{If port 8080 is still in use}
+
+Sometimes the server does not close cleanly. Run:
 
 \begin{lstlisting}
 netstat -ano | findstr :8080
+\end{lstlisting}
+
+Find the PID (last column), then:
+
+\begin{lstlisting}
 taskkill /PID <PID> /F
 \end{lstlisting}
+
+Replace \texttt{<PID>} with the actual number (for example, \texttt{12345}).
+
+\section*{Troubleshooting}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{``index.html not found''} --- You started the server from the wrong folder. Use \texttt{cd} to the project root first.
+  \item \textbf{``Failed to bind port 8080''} --- Another program is using port 8080. Stop it with the steps above.
+  \item \textbf{Ollama shows OFFLINE} --- Start the Ollama app, then run the \texttt{ollama pull} commands from Step 1.
+  \item \textbf{Vector search works but RAG does not} --- RAG needs Ollama online with both models pulled.
+\end{itemize}
 
 \end{document}
